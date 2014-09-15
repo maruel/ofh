@@ -20,13 +20,13 @@ import (
 // on an headless machine (e.g. without a graphical interface).
 //
 // This function will be called during the authentication phase.
-type PromptFunc func(authUrl string) string
+type PromptFunc func(authURL string) string
 
-// Prompts the user for authentication code for InstalledApp workflow.
+// Prompt prompts the user for authentication code for InstalledApp workflow.
 //
 // BUG(maruel): This is cheezy to prompt the user during an HTTP request.
-func Prompt(authUrl string) string {
-	fmt.Printf("Visit URL %s\n", authUrl)
+func Prompt(authURL string) string {
+	fmt.Printf("Visit URL %s\n", authURL)
 	for {
 		fmt.Printf("\nType the code here: ")
 		line, _, err := bufio.NewReader(os.Stdin).ReadLine()
@@ -50,13 +50,17 @@ type TokenCache struct {
 	dirty       bool
 }
 
+// Token returns the cached token if it exists. It implements interface
+// oauth.Cache.
 func (t *TokenCache) Token() (*oauth.Token, error) {
 	if t.CachedToken == nil {
-		return nil, errors.New("Not found")
+		return nil, errors.New("not found")
 	}
 	return t.CachedToken, nil
 }
 
+// PutToken inserts a new token in the cache and mark the cache as dirty. It
+// implements interface oauth.Cache.
 func (t *TokenCache) PutToken(tok *oauth.Token) error {
 	t.dirty = true
 	t.CachedToken = tok
@@ -92,6 +96,7 @@ type InstalledApp struct {
 	ScopedTokenCache map[string]*TokenCache // The cache is important to reduce redundant requests.
 }
 
+// ShouldSave returns true if the cache is dirty and should be saved.
 func (i *InstalledApp) ShouldSave() bool {
 	if !i.locked {
 		panic("Must be called with Lock held.")
@@ -104,6 +109,8 @@ func (i *InstalledApp) ShouldSave() bool {
 	return false
 }
 
+// ClearDirtyBit resets the dirty bit, which should be set after saving the
+// token cache.
 func (i *InstalledApp) ClearDirtyBit() {
 	if !i.locked {
 		panic("Must be called with Lock held.")
@@ -162,7 +169,7 @@ func (i *InstalledApp) GetClientPrompt(scope string, r http.RoundTripper, prompt
 		code := prompt(config.AuthCodeURL(""))
 		// Exchange() automatically calls .TokenCache.PutToken(token)
 		if _, err := transport.Exchange(code); err != nil {
-			return nil, fmt.Errorf("Failed to exchange OAuth2 token: %s", err)
+			return nil, fmt.Errorf("failed to exchange OAuth2 token: %s", err)
 		}
 	}
 	return transport.Client(), nil

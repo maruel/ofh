@@ -69,7 +69,7 @@ func (t *transport) renewIfExpired() error {
 	if t.accessToken.Expired() {
 		accessToken, err := t.token.Assert(&http.Client{Transport: t.transport})
 		if err != nil {
-			return fmt.Errorf("Failed to assert oauth2 token while refreshing: %s", err)
+			return fmt.Errorf("failed to assert oauth2 token while refreshing: %s", err)
 		}
 		t.accessToken = accessToken
 	}
@@ -99,7 +99,7 @@ func (s *ServiceAccount) GetClient(scope string, r http.RoundTripper) (*http.Cli
 	// Get the access token right away by doing an HTTP request.
 	accessToken, err := tok.Assert(&http.Client{Transport: r})
 	if err != nil {
-		return nil, fmt.Errorf("Failed to assert new oauth2 token: %s", err)
+		return nil, fmt.Errorf("failed to assert new oauth2 token: %s", err)
 	}
 	t := &transport{
 		token:       tok,

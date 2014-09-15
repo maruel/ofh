@@ -69,10 +69,11 @@ func MakeStubProvider(client *http.Client) *StubProvider {
 	return &StubProvider{client, []string{}}
 }
 
+// GetClient implements OAuth2ClientProvider.
 func (s *StubProvider) GetClient(scope string, r http.RoundTripper) (*http.Client, error) {
 	s.Scopes = append(s.Scopes, scope)
 	if s.client == nil {
-		return nil, errors.New("No client")
+		return nil, errors.New("no client")
 	}
 	return s.client, nil
 }
