@@ -1,10 +1,9 @@
-Swarming (Go)
-=============
+OAuth2 For Humans
+=================
 
-This directory contains the services needed to run a Golang Isolate Server.
+It supports both 'installed app' and 'service account' flows. The user can use
+each of these seamlessly.
 
-- isolateserver/ contains the code for the Isolate Server.
-- pkg/ contains the generic packages.
-- tools/ contains utilities to help run, test and deploy the server.
-
-This code is only tested on Ubuntu.
+The use case is to simplify supporting a client app to use either a role account
+(via a private key) or impersonate a user (via a client key). Token renewal is
+done automatically.

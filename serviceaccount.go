@@ -39,7 +39,7 @@ type ServiceAccount struct {
 
 type transport struct {
 	token     *jwt.Token
-	prjectID  string
+	projectID string
 	transport http.RoundTripper
 
 	lock        sync.Mutex

@@ -5,7 +5,6 @@
 package ofh
 
 import (
-	"github.com/maruel/ut"
 	"net/http"
 	"testing"
 )
