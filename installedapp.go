@@ -6,13 +6,14 @@ package ofh
 
 import (
 	"bufio"
-	"code.google.com/p/goauth2/oauth"
 	"errors"
 	"fmt"
 	"net/http"
 	"os"
 	"strings"
 	"sync"
+
+	"code.google.com/p/goauth2/oauth"
 )
 
 // PromptFunc is used by installed client applications for authentication

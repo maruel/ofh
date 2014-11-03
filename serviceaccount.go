@@ -5,11 +5,12 @@
 package ofh
 
 import (
-	"code.google.com/p/goauth2/oauth"
-	"code.google.com/p/goauth2/oauth/jwt"
 	"fmt"
 	"net/http"
 	"sync"
+
+	"code.google.com/p/goauth2/oauth"
+	"code.google.com/p/goauth2/oauth/jwt"
 )
 
 // A ServiceAccount is a proper identity. This is why the private key must be

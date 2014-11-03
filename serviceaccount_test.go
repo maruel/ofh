@@ -9,9 +9,10 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"github.com/maruel/ut"
 	"net/http"
 	"testing"
+
+	"github.com/maruel/ut"
 )
 
 func TestServiceAccount(t *testing.T) {
@@ -29,7 +30,7 @@ func TestServiceAccount(t *testing.T) {
 	}
 	tokReply := `{"access_token":"a", "token_type": "r", "id_token": ""}`
 	resp := []*http.Response{
-		&http.Response{StatusCode: 200, Body: asReader(tokReply)},
+		{StatusCode: 200, Body: asReader(tokReply)},
 	}
 	r := &roundTripperStub{[]*http.Request{}, resp}
 	_, err = s.GetClient("scope", r)

@@ -6,11 +6,12 @@ package ofh
 
 import (
 	"bytes"
-	"github.com/maruel/ut"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/maruel/ut"
 )
 
 type roundTripperStub struct {
@@ -39,7 +40,7 @@ func TestInstalledApp(t *testing.T) {
 	}
 	tokReply := `{"access_token":"a", "refresh_token": "r", "id_token": "i"}`
 	resp := []*http.Response{
-		&http.Response{StatusCode: 200, Body: asReader(tokReply)},
+		{StatusCode: 200, Body: asReader(tokReply)},
 	}
 	r := &roundTripperStub{[]*http.Request{}, resp}
 	prompt := func(string) string {
