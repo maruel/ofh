@@ -13,7 +13,7 @@ import (
 	"strings"
 	"sync"
 
-	"code.google.com/p/goauth2/oauth"
+	"golang.org/x/oauth2"
 )
 
 // PromptFunc is used by installed client applications for authentication
@@ -41,19 +41,19 @@ func Prompt(authURL string) string {
 }
 
 // TokenCache specifies the methods that implements an oauth2.Token cache. An
-// oauth.Token contains the AccessToken and RefreshToken, so that as soon as a
+// oauth2.Token contains the AccessToken and RefreshToken, so that as soon as a
 // connection is authenticated, other connections using the same cache will be
 // able to reuse the token as-is.
 //
 // It is exported so it can be serialized safely.
 type TokenCache struct {
-	CachedToken *oauth.Token
+	CachedToken *oauth2.Token
 	dirty       bool
 }
 
 // Token returns the cached token if it exists. It implements interface
-// oauth.Cache.
-func (t *TokenCache) Token() (*oauth.Token, error) {
+// oauth2.Cache.
+func (t *TokenCache) Token() (*oauth2.Token, error) {
 	if t.CachedToken == nil {
 		return nil, errors.New("not found")
 	}
@@ -61,8 +61,8 @@ func (t *TokenCache) Token() (*oauth.Token, error) {
 }
 
 // PutToken inserts a new token in the cache and mark the cache as dirty. It
-// implements interface oauth.Cache.
-func (t *TokenCache) PutToken(tok *oauth.Token) error {
+// implements interface oauth2.Cache.
+func (t *TokenCache) PutToken(tok *oauth2.Token) error {
 	t.dirty = true
 	t.CachedToken = tok
 	return nil
@@ -152,16 +152,16 @@ func (i *InstalledApp) GetClientPrompt(scope string, r http.RoundTripper, prompt
 	}
 	tokenCache := i.getToken(scope)
 	token, _ := tokenCache.Token()
-	config := &oauth.Config{
-		ClientId:     i.ClientID,
+	config := &oauth2.Config{
+		ClientID:     i.ClientID,
 		ClientSecret: i.ClientSecret,
-		Scope:        scope,
+		Scopes:       []string{scope},
 		AuthURL:      i.AuthURL,
 		TokenURL:     i.TokenURL,
 		TokenCache:   tokenCache,
 		RedirectURL:  "urn:ietf:wg:oauth:2.0:oob", // BUG(maruel): Add option of http://localhost:<port> to remove the need of copy-pasting.
 	}
-	transport := &oauth.Transport{
+	transport := &oauth2.Transport{
 		Config:    config,
 		Token:     token,
 		Transport: r,

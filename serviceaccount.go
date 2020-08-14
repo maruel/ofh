@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"sync"
 
-	"code.google.com/p/goauth2/oauth"
-	"code.google.com/p/goauth2/oauth/jwt"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/jwt"
 )
 
 // A ServiceAccount is a proper identity. This is why the private key must be
@@ -39,12 +39,12 @@ type ServiceAccount struct {
 }
 
 type transport struct {
-	token     *jwt.Token
+	token     *oauth2.Token
 	projectID string
 	transport http.RoundTripper
 
 	lock        sync.Mutex
-	accessToken *oauth.Token
+	accessToken *oauth2.Token
 }
 
 // cloneRequest returns a clone of the provided *http.Request.
